@@ -1,22 +1,26 @@
 <?php
 
-use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+use App\Http\Controllers\PaymentController;
 
 
-Route::prefix('news')
-    ->controller(NewsController::class)
-    ->group(function () {
-        Route::get('/', 'index');
-        Route::get('create', 'create');
-        Route::post('/', 'store');
-        Route::get('{id}', 'show');
-        Route::get('{id}/edit', 'edit');
-        Route::put('{id}', 'update');
-        Route::delete('{id}', 'destroy');
+Route::get('/', function () {
+    return view('welcome');
 });
+
+Route::get('/pay', function () {
+    return view('pay');
+});
+
+Route::get('/getToken', [PaymentController::class, 'getAccessToken'])->name('getToken');
+Route::post('/payment/initiate', [PaymentController::class, 'initiatePayment'])->name('payment.initiate');
+Route::post('/payment/callback', [PaymentController::class, 'handleCallback'])->name('payment.callback');
+// დამატებითი როუტები გადახდის წარმატებისა და წარუმატებლობისთვის
+Route::get('/payment/success', function () {
+    return view('payment.success');
+})->name('payment.success');
+
+Route::get('/payment/fail', function () {
+    return view('payment.fail');
+})->name('payment.fail');
